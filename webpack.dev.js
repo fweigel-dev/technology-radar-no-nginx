@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const postcssPresetEnv = require('postcss-preset-env')
 const cssnano = require('cssnano')
+const path = require('path')
 
 const common = require('./webpack.common.js')
 const config = require('./src/config')
@@ -71,4 +72,26 @@ module.exports = merge(common, {
     }),
   ],
   devtool: 'source-map',
-})
+  devServer: {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+    },
+    allowedHosts: 'all',
+    static: [
+      {
+        directory: path.join(__dirname, 'dist'),
+      },
+      {
+        directory: path.join(__dirname, 'files'),
+        publicPath: '/files',
+        serveIndex: true,
+      }
+    ],
+    hot: true,
+    port: 8080,
+    historyApiFallback: true,
+    compress: true
+  }
+});
